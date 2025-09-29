@@ -43,10 +43,13 @@ jobs:
           echo "Checking Makefile exists..."
           ls -la
           
-          echo "Configuring git safe directory..."
+          echo "Configuring git safe directories..."
           git config --global --add safe.directory /workspace
+          git config --global --add safe.directory /workspace/lib/uf2
           
           echo "Running make in Docker..."
           docker run --rm -v $(pwd):/workspace -w /workspace uf2-builder \
-            bash -c "git config --global --add safe.directory /workspace && make BOARD=XIAO_samd11 -j4"
+            bash -c "git config --global --add safe.directory /workspace && \
+                    git config --global --add safe.directory /workspace/lib/uf2 && \
+                    make BOARD=XIAO_samd11 -j4"
           cd ~ && ls
