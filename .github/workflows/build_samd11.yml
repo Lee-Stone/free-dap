@@ -25,10 +25,10 @@ jobs:
       - name: Build
         run: 
           make -C platform/samd11/make -f Makefile_bl_5k clean all
-          ./uf2_transform/uf2conv.sh
+          tools/uf2_transform/uf2conv.sh
 
       - name: Upload samd11 app firmware
         uses: actions/upload-artifact@v4
         with:
           name: xiao-samd11-app
-          path: ./uf2_transform/xiao_samd11.uf2
+          path: tools/uf2_transform/xiao_samd11.uf2
