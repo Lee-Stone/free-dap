@@ -14,7 +14,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Install Dependencies
@@ -37,5 +37,7 @@ jobs:
         run: |
           cd ~ && git clone https://github.com/Seeed-Studio/uf2-samdx1.git
           cd uf2-samdx1 && git checkout samd11
-          make BOARD=XIAO_samd11 -j4
+          docker build -t uf2-builder -f .devcontainer/Dockerfile .
+          docker run --rm -v $(pwd):/workspace uf2-builder \
+            make BOARD=XIAO_samd11 -j4
           cd ~ && ls
