@@ -52,4 +52,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: xiao-samd11-bootloader-firmware
-          path: tools/bin_combined/XIAO_samd11.bin
+          path: tools/bin_combined/xiao_samd11.bin
