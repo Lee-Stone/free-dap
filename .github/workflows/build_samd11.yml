@@ -78,6 +78,12 @@ jobs:
           name: xiao-nrf54l15-bootloader-firmware
           path: tools/bin_combined/xiao_samd11.bin 
 
+      - name: Upload test Firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: xiao-nrf54l15-bootloader-firmware
+          path: build/XIAO_samd11/bootloader-XIAO_samd11*.bin
+
       - name: Upload nRF54L15 Bootloader Firmware to Release
         if: github.event_name == 'release'
         run: |
