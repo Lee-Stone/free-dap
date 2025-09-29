@@ -73,6 +73,7 @@ jobs:
                     git config --global --add safe.directory /workspace/lib/uf2 && \
                     make clean && make BOARD=XIAO_samd11 PLAT=MG24 -j4"\
 
+          rm ../free-dap/tools/bin_combined/*.bin
           cp build/XIAO_samd11/bootloader-XIAO_samd11*.bin ../free-dap/tools/bin_combined/
           cd ../free-dap/tools/bin_combined && ./uf2boot_combined.sh
 
