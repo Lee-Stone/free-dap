@@ -35,6 +35,7 @@ jobs:
 
       - name: Build SAMD11 Bootloader Firmware
         run: |
+          ls
           cd ~ && git clone https://github.com/Seeed-Studio/uf2-samdx1.git
           cd uf2-samdx1 && git checkout samd11
           echo "Building Docker image..."
@@ -45,6 +46,5 @@ jobs:
             bash -c "git config --global --add safe.directory /workspace && \
                     git config --global --add safe.directory /workspace/lib/uf2 && \
                     make BOARD=XIAO_samd11 -j4"
-          
-          echo "Listing files in ~ directory:"
-          cd build/XIAO_samd11 && ls -la
+
+          # cp build/XIAO_samd11/bootloader-XIAO_samd11*.bin ~/freedap/tools/bin_combined/
