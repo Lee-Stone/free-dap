@@ -22,18 +22,29 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gcc-arm-none-eabi
 
-      - name: Build SAMD11 App Firmware
+      - name: Build nRF54L15 App Firmware
         run: |
-          make -C platform/samd11/make -f Makefile_bl_5k clean all
+          make -C platform/samd11/make -f Makefile_bl_5k PLAT=nRF54L15 clean all
           cd tools/uf2_transform && ./uf2conv.sh
 
-      - name: Upload SAMD11 APP Firmware
+      - name: Upload nRF54L15 APP Firmware
         uses: actions/upload-artifact@v4
         with:
-          name: xiao-samd11-app-firmware
+          name: xiao-nrf54l15-app-firmware
           path: tools/uf2_transform/xiao_samd11.uf2
 
-      - name: Build SAMD11 Bootloader Firmware
+      - name: Build MG24 App Firmware
+        run: |
+          make -C platform/samd11/make -f Makefile_bl_5k PLAT=MG24 clean all
+          cd tools/uf2_transform && ./uf2conv.sh
+
+      - name: Upload MG24 APP Firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: xiao-mg24-app-firmware
+          path: tools/uf2_transform/xiao_samd11.uf2
+
+      - name: Build nRF54L15 Bootloader Firmware
         run: |
           cd .. && git clone https://github.com/Seeed-Studio/uf2-samdx1.git
           cd uf2-samdx1 && git checkout samd11
@@ -48,8 +59,25 @@ jobs:
           cp build/XIAO_samd11/bootloader-XIAO_samd11*.bin ../free-dap/tools/bin_combined/
           cd ../free-dap/tools/bin_combined && ./uf2boot_combined.sh
 
-      - name: Upload SAMD11 Bootloader Firmware
+      - name: Upload nRF54L15 Bootloader Firmware
         uses: actions/upload-artifact@v4
         with:
-          name: xiao-samd11-bootloader-firmware
-          path: tools/bin_combined/xiao_samd11.bin     
+          name: xiao-nrf54l15-bootloader-firmware
+          path: tools/bin_combined/xiao_samd11.bin  
+
+      - name: Build MG24 Bootloader Firmware
+        run: |
+          cd ../uf2-samdx1
+          docker run --rm -v $(pwd):/workspace -w /workspace uf2-builder \
+            bash -c "git config --global --add safe.directory /workspace && \
+                    git config --global --add safe.directory /workspace/lib/uf2 && \
+                    make clean && make BOARD=XIAO_samd11 PLAT=MG24 -j4"\
+
+          cp build/XIAO_samd11/bootloader-XIAO_samd11*.bin ../free-dap/tools/bin_combined/
+          cd ../free-dap/tools/bin_combined && ./uf2boot_combined.sh
+
+      - name: Upload MG24 Bootloader Firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: xiao-mg24-bootloader-firmware
+          path: tools/bin_combined/xiao_samd11.bin
