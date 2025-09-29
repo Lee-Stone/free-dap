@@ -46,4 +46,10 @@ jobs:
                     make BOARD=XIAO_samd11 -j4"
 
           cp build/XIAO_samd11/bootloader-XIAO_samd11*.bin ../free-dap/tools/bin_combined/
-          cd ../free-dap/tools/bin_combined && ls
+          cd ../free-dap/tools/bin_combined && ./uf2boot_combined.sh
+
+      - name: Upload SAMD11 Bootloader Firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: xiao-samd11-bootloader-firmware
+          path: tools/bin_combined/XIAO_samd11.bin
