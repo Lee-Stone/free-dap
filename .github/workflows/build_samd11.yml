@@ -1,0 +1,21 @@
+name: Build SAMD11
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 1'
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    types: [closed]
+  release:
+    types: [ created ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: make -C platform/samd11/make -f Makefile_bl_5k clean all
