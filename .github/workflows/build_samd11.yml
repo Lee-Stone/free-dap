@@ -25,7 +25,7 @@ jobs:
       - name: Build
         run: |
           make -C platform/samd11/make -f Makefile_bl_5k clean all
-          cd tools/uf2_transform && uf2conv.sh
+          cd tools/uf2_transform && ./uf2conv.sh
 
       - name: Upload samd11 app firmware
         uses: actions/upload-artifact@v4
