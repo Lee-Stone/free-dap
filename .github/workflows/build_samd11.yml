@@ -43,6 +43,30 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Build nRF54L15 Bootloader Firmware
+        run: |
+          cd .. && git clone https://github.com/Seeed-Studio/uf2-samdx1.git
+          cd uf2-samdx1 && git checkout samd11
+          make clean && make BOARD=XIAO_samd11 PLAT=nRF54L15 -j4
+          cp build/XIAO_samd11/bootloader-XIAO_samd11*.bin ../free-dap/tools/bin_combined/ 
+          cd ../free-dap/tools/bin_combined && ./uf2boot_combined.sh
+
+      - name: Upload nRF54L15 Bootloader Firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: xiao-nrf54l15-bootloader-firmware
+          path: tools/bin_combined/xiao_samd11.bin 
+
+      - name: Upload nRF54L15 Bootloader Firmware to Release
+        if: github.event_name == 'release'
+        run: |
+          mv tools/bin_combined/xiao_samd11.bin tools/bin_combined/xiao_nrf54l15_bootloader.bin
+          gh release upload ${{ github.event.release.tag_name }} \
+            tools/bin_combined/xiao_nrf54l15_bootloader.bin \
+            --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build MG24 App Firmware
         run: |
           make -C platform/samd11/make -f Makefile_bl_5k PLAT=MG24 clean all
@@ -60,36 +84,6 @@ jobs:
           mv tools/uf2_transform/xiao_samd11.uf2 tools/uf2_transform/xiao_mg24_app.uf2
           gh release upload ${{ github.event.release.tag_name }} \
             tools/uf2_transform/xiao_mg24_app.uf2 \
-            --clobber
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build nRF54L15 Bootloader Firmware
-        run: |
-          cd .. && git clone https://github.com/Seeed-Studio/uf2-samdx1.git
-          cd uf2-samdx1 && git checkout samd11
-          make clean && make BOARD=XIAO_samd11 PLAT=nRF54L15 -j4
-          cp build/XIAO_samd11/bootloader-XIAO_samd11*.bin ../free-dap/tools/bin_combined/ 
-          cd ../free-dap/tools/bin_combined && ./uf2boot_combined.sh
-
-      - name: Upload nRF54L15 Bootloader Firmware
-        uses: actions/upload-artifact@v4
-        with:
-          name: xiao-nrf54l15-bootloader-firmware
-          path: tools/bin_combined/xiao_samd11.bin 
-
-      - name: Upload test Firmware
-        uses: actions/upload-artifact@v4
-        with:
-          name: xiao-nrf54l15-bootloader-firmware
-          path: build/XIAO_samd11/bootloader-XIAO_samd11-v1.23.0-359-g022aa9b.bin
-
-      - name: Upload nRF54L15 Bootloader Firmware to Release
-        if: github.event_name == 'release'
-        run: |
-          mv tools/bin_combined/xiao_samd11.bin tools/bin_combined/xiao_nrf54l15_bootloader.bin
-          gh release upload ${{ github.event.release.tag_name }} \
-            tools/bin_combined/xiao_nrf54l15_bootloader.bin \
             --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
