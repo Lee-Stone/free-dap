@@ -45,5 +45,6 @@ jobs:
             bash -c "git config --global --add safe.directory /workspace && \
                     git config --global --add safe.directory /workspace/lib/uf2 && \
                     make BOARD=XIAO_samd11 -j4"
+
           cp build/XIAO_samd11/bootloader-XIAO_samd11*.bin ../freedap/tools/bin_combined/
           cd ../freedap/tools/bin_combined && ls
