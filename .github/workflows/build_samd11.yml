@@ -39,17 +39,12 @@ jobs:
           cd uf2-samdx1 && git checkout samd11
           echo "Building Docker image..."
           docker build -t uf2-builder -f .devcontainer/Dockerfile .
-          
-          echo "Checking Makefile exists..."
-          ls -la
-          
-          echo "Configuring git safe directories..."
           git config --global --add safe.directory /workspace
           git config --global --add safe.directory /workspace/lib/uf2
-          
-          echo "Running make in Docker..."
           docker run --rm -v $(pwd):/workspace -w /workspace uf2-builder \
             bash -c "git config --global --add safe.directory /workspace && \
                     git config --global --add safe.directory /workspace/lib/uf2 && \
                     make BOARD=XIAO_samd11 -j4"
-          cd ~ && ls
+          
+          echo "Listing files in ~ directory:"
+          cd build/XIAO_samd11 && ls -la
