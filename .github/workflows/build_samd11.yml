@@ -70,7 +70,7 @@ jobs:
           cd uf2-samdx1 && git checkout samd11
           make clean && make BOARD=XIAO_samd11 PLAT=nRF54L15 -j4
           cp build/XIAO_samd11/bootloader-XIAO_samd11*.bin ../free-dap/tools/bin_combined/ 
-          cd ../free-dap/tools/bin_combined && ./uf2boot_combined.sh && ls
+          cd ../free-dap/tools/bin_combined && ./uf2boot_combined.sh
 
       - name: Upload nRF54L15 Bootloader Firmware
         uses: actions/upload-artifact@v4
@@ -82,7 +82,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: xiao-nrf54l15-bootloader-firmware
-          path: build/XIAO_samd11/bootloader-XIAO_samd11*.bin
+          path: build/XIAO_samd11/bootloader-XIAO_samd11-v1.23.0-359-g022aa9b.bin
 
       - name: Upload nRF54L15 Bootloader Firmware to Release
         if: github.event_name == 'release'
